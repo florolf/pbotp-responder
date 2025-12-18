@@ -60,7 +60,7 @@ func NewResponder(privKeyBytes []byte, mode Mode, length int) (*Responder, error
 	}, nil
 }
 
-func (r *Responder) Response(payload []byte, challenge []byte, length int) (string, error) {
+func (r *Responder) Response(payload []byte, challenge []byte) (string, error) {
 	var err error
 
 	var pubKey *ecdh.PublicKey
@@ -229,7 +229,7 @@ func makeHandler(responder *Responder, cfg *Config) http.HandlerFunc {
 		}
 		payload := []byte(group + "\x00" + node + "\x00" + user + "\x00")
 
-		resp, err := responder.Response(payload, challenge, cfg.ResponseLength)
+		resp, err := responder.Response(payload, challenge)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
